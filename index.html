@@ -7,4 +7,56 @@
 
 <body>
 
+	<block>
+		<title> Introduction </title>
+		<content> 
+			Rank Pairing Heap is intended to achieve same time complexity as Fibonacci Heap, but have a simpler structure to implement.
+			
+			// here goes comparison of time complexity between Rank Pairing Heap and Fibonacci Heap
+			
+		</content>
+	</block>
+	
+	<block>
+		<title> Operations </title>
+		
+		<sub>
+			<title> Basic Structure </title>
+			<content>
+				Rank Pairing Heap uses a data structure of binary half tree, which is an alternative representation of heap tree. For a node in half tree, its left child is the first child in the heap-ordered representation, and its right child is the next siblinbg. Half tree has a property that a node is smaller than any nodes in its left spin. Therefore, a half-tree should look like below, where the root only have left child.
+				
+				// here goes diagram of a heap and its corresponding half tree representation
+				
+				Rank Pairing Heap contains a set of half trees which are linked circularly. The head of the linked list is the minimum element among all nodes in the Rank Pairing Heap.
+				
+			</content>	
+		</sub>
+		
+		<sub>
+			<title> Find Min </title>
+		</sub>
+		
+		<sub>
+			<title> Insert </title>
+		</sub>
+		
+		<sub>
+			<title> Union </title>
+		</sub>
+		
+		<sub>
+			<title> Decrease Key </title>
+		</sub>
+		
+		<sub>
+			<title> Extract Min </title>
+		</sub>
+	</block>
+
+
+	<block>
+		<title> Amortization </title>
+	</block>
+
+
 </body>
