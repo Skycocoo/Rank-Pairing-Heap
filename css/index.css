@@ -31,10 +31,10 @@ sub title {
 
 
 
-#cy {
-    width: 300px;
-    height: 300px;
-    display: block;
+.cy {
+    width: 400px;
+    height: 400px;
+    display: inline-block;
 }
 
 p {
