@@ -36,3 +36,13 @@ sub title {
     height: 300px;
     display: block;
 }
+
+p {
+    position: relative;
+    left: 30px;
+    font-size: 15px;
+}
+
+.cyrank {
+    top: -15px;
+}

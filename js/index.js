@@ -4,8 +4,8 @@ var cy = cytoscape({
         {
             selector: 'node',
             style: {
-                'label': 'data(id)',
-                'text-valign': 'center',
+                // 'label': 'data(rank)' + 'data(id)',
+                'text-valign': 'top',
                 'text-halign': 'right',
             }
         },
@@ -14,9 +14,9 @@ var cy = cytoscape({
             style: {
                 'curve-style': 'bezier',
                 // 'width': 4,
-                // 'target-arrow-shape': 'triangle',
-                // 'line-color': '#9dbaea',
-                // 'target-arrow-color': '#9dbaea'
+                'target-arrow-shape': 'triangle',
+                'line-color': '#9dbaea',
+                'target-arrow-color': '#9dbaea'
             }
         },
     ],
@@ -29,7 +29,9 @@ for (i = 0; i < 5; ++i) {
     elems.push({
         group: 'nodes',
         data: {
-            id: i.toString(10),
+            id: i,
+            val: i,
+            rank: 0,
         }
     });
 
@@ -37,7 +39,6 @@ for (i = 0; i < 5; ++i) {
         elems.push({
             group: 'edges',
             data: {
-                id: 'e' + (i-2).toString(10),
                 source: (i-2).toString(10),
                 target: (i).toString(10),
             }
@@ -48,7 +49,6 @@ for (i = 0; i < 5; ++i) {
         elems.push({
             group: 'edges',
             data: {
-                id: 'e' + (i+1).toString(10),
                 source: (i+1).toString(10),
                 target: (i).toString(10),
             },
@@ -57,4 +57,22 @@ for (i = 0; i < 5; ++i) {
 }
 cy.add(elems);
 
-cy.layout({ name: 'dagre' }).run();
+nodes = cy.nodes();
+console.log(nodes[0]);
+
+cy.nodeHtmlLabel([
+    {
+        query: 'node',
+        halign: 'right',
+        valign: 'center',
+        tpl: function (data) {
+            // return 'Val: ' + data.id + '\nRank:' + data.rank;
+            return '<p class="cyid"> Val: ' + data.id + '</p>' +
+                   '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+        }
+    },
+]);
+
+
+
+cy.layout({name: 'dagre'}).run();
