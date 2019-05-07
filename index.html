@@ -1,53 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- <link rel="stylesheet" href="css/index.css"> -->
+    <link rel="stylesheet" href="css/index.css">
     <title> Rank Pairing Heap </title>
 </head>
 
 <body>
+    <block>
+        <h1> Rank Pairing Heap </h1>
+        <content> Yuxi Luo - CS3393 Algorithms 2 </content>
+    </block>
 
 	<block>
 		<title> Introduction </title>
-		<content> 
+		<content>
 			Rank Pairing Heap is intended to achieve same time complexity as Fibonacci Heap, but have a simpler structure to implement.
-			
+
+            <br>
+
 			// here goes comparison of time complexity between Rank Pairing Heap and Fibonacci Heap
-			
+
+            <div id="cy"></div>
+
 		</content>
 	</block>
-	
+
 	<block>
 		<title> Operations </title>
-		
+
 		<sub>
 			<title> Basic Structure </title>
 			<content>
 				Rank Pairing Heap uses a data structure of binary half tree, which is an alternative representation of heap tree. For a node in half tree, its left child is the first child in the heap-ordered representation, and its right child is the next siblinbg. Half tree has a property that a node is smaller than any nodes in its left spin. Therefore, a half-tree should look like below, where the root only have left child.
-				
+
+                <br>
+
 				// here goes diagram of a heap and its corresponding half tree representation
-				
+
+                <br>
+
 				Rank Pairing Heap contains a set of half trees which are linked circularly. The head of the linked list is the minimum element among all nodes in the Rank Pairing Heap.
-				
-			</content>	
+
+			</content>
 		</sub>
-		
+
 		<sub>
 			<title> Find Min </title>
 		</sub>
-		
+
 		<sub>
 			<title> Insert </title>
 		</sub>
-		
+
 		<sub>
 			<title> Union </title>
 		</sub>
-		
+
 		<sub>
 			<title> Decrease Key </title>
 		</sub>
-		
+
 		<sub>
 			<title> Extract Min </title>
 		</sub>
@@ -58,5 +70,8 @@
 		<title> Amortization </title>
 	</block>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.6.0/cytoscape.min.js"></script>
+    <script src="js/index.js"></script>
 
 </body>
