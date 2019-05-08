@@ -161,6 +161,8 @@ class RankPairingHeap {
 
         // assign the new key
         this.arr[arr_ind][index] = new_key;
+        // if decrease key of a root: no need to continue
+        if (index == 0) return;
 
         let subtree = this.get_sub_tree(this.arr[arr_ind], index),
             right_spine = this.get_sub_tree(this.arr[arr_ind], 2 * index + 2);
@@ -177,10 +179,19 @@ class RankPairingHeap {
 
         // recalculate rank for each half-tree
         this.calc_rank();
+
+
+        // link all pairs of roots with same rank
+        this.link_trees();
     }
 
 
     // ------------------- helper functions -------------------
+
+    link_trees() {
+        let max_rank = Math.max(...this.rank);
+        console.log(max_rank, this.rank);
+    }
 
     get_sub_tree(arr, index) {
         if (index >= arr.length) return [null];
@@ -262,6 +273,7 @@ class RankPairingHeap {
     }
 
     calc_rank() {
+        this.rank = [];
         // calculate rank for current half trees
         for (let i = 0; i < this.arr.length; ++i) {
             let temp_rank = Array(this.arr[i].length).fill(-1);
@@ -277,7 +289,7 @@ class RankPairingHeap {
             // console.log(temp_rank);
             this.rank.push(temp_rank[0]);
         }
-        // console.log(this.rank);
+        // console.log(this.rank, this.arr);
     }
 }
 
@@ -331,7 +343,9 @@ display_tree_cy(decrease_cy, function (data) {
 // ajax
 
 $("#insert-form").submit(function() {
-    rp.insert([parseInt($("#insert").val(), 10)]);
+    if (!isNaN(parseInt($("#insert").val(), 10))) {
+        rp.insert([parseInt($("#insert").val(), 10)]);
+    }
     insert_cy = add_tree_cy(init_cy($('#cy-insert')), rp.arr, 'insert');
     display_tree_cy(insert_cy, function (data) {
         // return '<p class="cyval"> ' + data.val + '</p>';
@@ -343,7 +357,10 @@ $("#insert-form").submit(function() {
 });
 
 $("#decrease-form").submit(function() {
-    rp.decrease_key(parseInt($("#decrease-key").val()), parseInt($("#decrease-val").val()));
+    if (!isNaN(parseInt($("#decrease-key").val(), 10)) && !isNaN(parseInt($("#decrease-val").val(), 10))) {
+        rp.decrease_key(parseInt($("#decrease-key").val()), parseInt($("#decrease-val").val()));
+    }
+
     decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'insert');
     display_tree_cy(decrease_cy, function (data) {
         // return '<p class="cyval"> ' + data.val + '</p>';

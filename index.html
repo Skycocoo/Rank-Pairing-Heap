@@ -84,13 +84,15 @@
             <content>
                 Like Fibonacci Heap, Rank Pairing Heap could grow into arbitrary structure. To maintain a reasonable bound on the level of the tree, it introduces a concept of Rank. It is similar to the concept of level.
 
-                Here introduces a Type 2 Rule of Rank for each node N (Assume the left child is L, and the right child is R):
+                Here introduces a Type 2 Rule of Rank for each node N (Assume that the left child is L, and the right child is R):
                 <ul>
                     <li> If it is a leaf, Rank = 0 </li>
                     <li> If it is a root, Rank = 1 + Rank(L) </li>
                     <li> If |Rank(L) - Rank(R)| <= 1: Rank = 1 + Max(Rank(L), Rank(R)) </li>
                     <li> If |Rank(L) - Rank(R)| > 1: Rank = Max(Rank(L), Rank(R)) </li>
                 </ul>
+
+                Later in Decrease Key operation, all pairs of Half Trees with same Rank will be linked together, so as to reduce the total number of roots.
 
             </content>
         </sub-block>
