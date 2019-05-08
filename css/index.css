@@ -1,6 +1,6 @@
 body {
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 15%;
+    padding-right: 15%;
 }
 
 header {
@@ -29,17 +29,25 @@ sub title {
     font-size: 20px;
 }
 
+.content-main {
+    line-height: 24px;
+}
 
+th, td {
+    padding: 0 10px 4px 0;
+    text-align: left;
+}
 
 .cy {
     width: 400px;
     height: 400px;
     display: inline-block;
+    /* margin: 0 auto; */
 }
 
 p {
     position: relative;
-    left: 30px;
+    left: 22px;
     font-size: 15px;
 }
 

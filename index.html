@@ -15,44 +15,72 @@
 		<title> Introduction </title>
 		<content>
 			Rank Pairing Heap is intended to achieve same time complexity as Fibonacci Heap, but have a simpler structure to implement.
-
+            <br>
             <br>
 
-			// here goes comparison of time complexity between Rank Pairing Heap and Fibonacci Heap
-
-            <br>
-
-            <div class="cy" id="cy-arr"></div>
-            <div class="cy" id="cy-half"></div>
-
+            <div class="content-main">
+                <table>
+                    <tr>
+                        <td> </td>
+                        <td> Insert </td>
+                        <td> Union </td>
+                        <td> Find Min </td>
+                        <td> Decrease Key </td>
+                        <td> Extract Min </td>
+                    </tr>
+                    <tr>
+                        <th> Fibonacci Heap </th>
+                        <td> O(1) </td>
+                        <td> O(1) </td>
+                        <td> O(1) </td>
+                        <td> O(1) amortized </td>
+                        <td> O(log(n)) amortized </td>
+                    </tr>
+                    <tr>
+                        <th> Rank Pairing Heap </th>
+                        <td> O(1) </td>
+                        <td> O(1) </td>
+                        <td> O(1) </td>
+                        <td> O(1) amortized </td>
+                        <td> O(log(n)) amortized </td>
+                    </tr>
+                </table>
+            </div>
 		</content>
 	</block>
 
+    <block>
+        <title> Basic Structure </title>
+        <content>
+            Rank Pairing Heap uses a data structure called binary half tree, which is an alternative representation of heap tree. For a node in half tree, its left child is the first child in the heap-ordered representation, and its right child is the next siblinbg. Half tree has a property that a node is smaller than any nodes in its left spin. Therefore, a half-tree should look like below, where the root only have left child.
+
+            <br>
+
+            <div class="cy" id="cy-heap"></div>
+            <div class="cy" id="cy-half"></div>
+
+            <h5 style="text-align:center;"> Min-Heap (left) => Half-Tree (right) </h5>
+
+            <br>
+
+            Rank Pairing Heap contains a set of half trees which are linked circularly. The head of the linked list is the minimum element.
+
+        </content>
+    </block>
+
 	<block>
 		<title> Operations </title>
-
-		<sub>
-			<title> Basic Structure </title>
-			<content>
-				Rank Pairing Heap uses a data structure of binary half tree, which is an alternative representation of heap tree. For a node in half tree, its left child is the first child in the heap-ordered representation, and its right child is the next siblinbg. Half tree has a property that a node is smaller than any nodes in its left spin. Therefore, a half-tree should look like below, where the root only have left child.
-
-                <br>
-
-				// here goes diagram of a heap and its corresponding half tree representation
-
-                <br>
-
-				Rank Pairing Heap contains a set of half trees which are linked circularly. The head of the linked list is the minimum element among all nodes in the Rank Pairing Heap.
-
-			</content>
-		</sub>
-
 		<sub>
 			<title> Find Min </title>
 		</sub>
 
 		<sub>
 			<title> Insert </title>
+            <form id="insert-form" action="" method="GET">
+                <input name="insert" id="insert" placeholder="- enter a number -" required>
+                <input type="submit" value="Submit">
+            </form>
+            <div class="cy" id="cy-insert"></div>
 		</sub>
 
 		<sub>
