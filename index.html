@@ -13,60 +13,90 @@
 
 	<block>
 		<title> Introduction </title>
-		<content>
-			Rank Pairing Heap is intended to achieve same time complexity as Fibonacci Heap, but have a simpler structure to implement.
-            <br>
-            <br>
 
-            <div class="content-main">
-                <table>
-                    <tr>
-                        <td> </td>
-                        <td> Insert </td>
-                        <td> Union </td>
-                        <td> Find Min </td>
-                        <td> Decrease Key </td>
-                        <td> Extract Min </td>
-                    </tr>
-                    <tr>
-                        <th> Fibonacci Heap </th>
-                        <td> O(1) </td>
-                        <td> O(1) </td>
-                        <td> O(1) </td>
-                        <td> O(1) amortized </td>
-                        <td> O(log(n)) amortized </td>
-                    </tr>
-                    <tr>
-                        <th> Rank Pairing Heap </th>
-                        <td> O(1) </td>
-                        <td> O(1) </td>
-                        <td> O(1) </td>
-                        <td> O(1) amortized </td>
-                        <td> O(log(n)) amortized </td>
-                    </tr>
-                </table>
-            </div>
-		</content>
+        <sub-block>
+			<title> Initiative </title>
+            <content>
+                Rank Pairing Heap is intended to achieve same time complexity as Fibonacci Heap, but have a simpler structure to implement.
+                <br>
+                <br>
+
+                <div class="content-main">
+                    <table>
+                        <tr>
+                            <td> </td>
+                            <td> Insert </td>
+                            <td> Union </td>
+                            <td> Find Min </td>
+                            <td> Decrease Key </td>
+                            <td> Extract Min </td>
+                        </tr>
+                        <tr>
+                            <th> Fibonacci Heap </th>
+                            <td> O(1) </td>
+                            <td> O(1) </td>
+                            <td> O(1) </td>
+                            <td> O(1) amortized </td>
+                            <td> O(log(n)) amortized </td>
+                        </tr>
+                        <tr>
+                            <th> Rank Pairing Heap </th>
+                            <td> O(1) </td>
+                            <td> O(1) </td>
+                            <td> O(1) </td>
+                            <td> O(1) amortized </td>
+                            <td> O(log(n)) amortized </td>
+                        </tr>
+                    </table>
+                </div>
+            </content>
+		</sub-block>
+
+        <sub-block>
+            <title> Basic Structure </title>
+            <content>
+                Rank Pairing Heap uses binary Half Tree, which is an alternative representation of Heap. For a node in Half Tree, its left child is the first left child in Heap, and its right child is the next sibling. Since a root in a Heap does not have any sibling, the root in Half Tree only have left child.
+
+                <br>
+
+                Half Tree has a property that a node is smaller than any nodes in its left spine.
+
+                <br>
+                <br>
+
+                <div class="cy" id="cy-heap"></div>
+                <h5 style="text-align:center;"> Min-Heap </h5>
+
+                <div class="cy" id="cy-half"></div>
+
+                <h5 style="text-align:center;"> Half-Tree </h5>
+
+                <br>
+
+                Rank Pairing Heap contains a set of Half Trees which is linked together with a linked list.
+
+                <br>
+            </content>
+        </sub-block>
+
+        <sub-block>
+            <title> Rank </title>
+            <content>
+                Like Fibonacci Heap, Rank Pairing Heap could grow into arbitrary structure. To maintain a reasonable bound on the level of the tree, it introduces a concept of Rank. It is similar to the concept of level.
+
+                Here introduces a Type 2 Rule of Rank for each node N (Assume the left child is L, and the right child is R):
+                <ul>
+                    <li> If it is a leaf, Rank = 0 </li>
+                    <li> If it is a root, Rank = 1 + Rank(L) </li>
+                    <li> If |Rank(L) - Rank(R)| <= 1: Rank = 1 + Max(Rank(L), Rank(R)) </li>
+                    <li> If |Rank(L) - Rank(R)| > 1: Rank = Max(Rank(L), Rank(R)) </li>
+                </ul>
+
+            </content>
+        </sub-block>
+
 	</block>
 
-    <block>
-        <title> Basic Structure </title>
-        <content>
-            Rank Pairing Heap uses a data structure called binary half tree, which is an alternative representation of heap tree. For a node in half tree, its left child is the first child in the heap-ordered representation, and its right child is the next siblinbg. Half tree has a property that a node is smaller than any nodes in its left spin. Therefore, a half-tree should look like below, where the root only have left child.
-
-            <br>
-
-            <div class="cy" id="cy-heap"></div>
-            <div class="cy" id="cy-half"></div>
-
-            <h5 style="text-align:center;"> Min-Heap (left) => Half-Tree (right) </h5>
-
-            <br>
-
-            Rank Pairing Heap contains a set of half trees which is linked together with a linked list.
-
-        </content>
-    </block>
 
 	<block>
 		<title> Operations </title>
@@ -89,7 +119,7 @@
                 <br>
 
                 <form id="insert-form" action="" method="GET">
-                    <input name="insert" id="insert" placeholder="- enter a number -" required>
+                    <input name="insert" id="insert" placeholder="a number to be inserted" required>
                     <input type="submit" value="submit">
                 </form>
                 <div class="cy" id="cy-insert"></div>
@@ -105,7 +135,26 @@
 
 		<sub-block>
 			<title> Decrease Key </title>
-            
+            <content>
+                To decrease key, there are few steps:
+                <ol>
+                    <li> Find the target node N and its corresponding subtree T(N). Assume the left child is L, and right child is R. Therefore, T(N) = N + T(L) + T(R) </li>
+                    <li> Split T(N) into two parts: one part is N + T(L), which forms a new Half Tree; the other part is T(R) </li>
+                    <li> Move T(R) to original location of N </li>
+                    <li> Insert the newly-formed Half Tree N + T(L) to the root list </li>
+                </ol>
+
+                <br>
+                <br>
+
+                <form id="decrease-form" action="" method="GET">
+                    <input name="decrease-key" id="decrease-key" placeholder="key to be decreased" required>
+                    <input name="decrease-val" id="decrease-val" placeholder="new value" required>
+                    <input type="submit" value="submit">
+                </form>
+                <div class="cy" id="cy-decrease"></div>
+
+            </content>
 		</sub-block>
 
 		<sub-block>

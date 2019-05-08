@@ -150,9 +150,14 @@ class RankPairingHeap {
             console.log("key does not exist");
             return;
         }
+
         let arr_ind = result[0],
-            index = result[1],
-            parent = Math.floor((result[1] + 1)/2);
+            index = result[1];
+
+        if (this.arr[arr_ind][index] < new_key) {
+            console.log("should not increment key");
+            return;
+        }
 
         // assign the new key
         this.arr[arr_ind][index] = new_key;
@@ -284,13 +289,13 @@ let heap = [1,
             2, 3,
             4, 6, 7, 8,
             5, 10, null, null, null, null, null, null,
-            9, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
 
 let half = [1,
             2, null,
             4, 3, null, null,
             5, 6, 7, 8, null, null, null, null,
-            9, 10, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+            null, 10, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
 
 rp.insert(half);
 
@@ -307,33 +312,48 @@ display_tree_cy(half_cy, function (data) {
 });
 
 
-// rp.decrease_key(4, -1);
-
 let insert_cy = add_tree_cy(init_cy($('#cy-insert')), rp.arr, 'insert');
 display_tree_cy(insert_cy, function (data) {
-    return '<p class="cyval"> ' + data.val + '</p>';
+    // return '<p class="cyval"> ' + data.val + '</p>';
+    return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+           '<p class="cyrank"> Rank: ' + data.rank + '</p>';
 });
 
-
+let decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'insert');
+display_tree_cy(decrease_cy, function (data) {
+    // return '<p class="cyval"> ' + data.val + '</p>';
+    return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+           '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+});
 
 
 
 // ajax
 
 $("#insert-form").submit(function() {
-    if ($("#insert").val() == "") return;
     rp.insert([parseInt($("#insert").val(), 10)]);
     insert_cy = add_tree_cy(init_cy($('#cy-insert')), rp.arr, 'insert');
     display_tree_cy(insert_cy, function (data) {
-        return '<p class="cyval"> ' + data.val + '</p>';
-        // return '<p class="cyid"> Val: ' + data.val + '</p>' +
-        //        '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+        // return '<p class="cyval"> ' + data.val + '</p>';
+        return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
     });
     $("#insert").val("");
     return false;
 });
 
-
+$("#decrease-form").submit(function() {
+    rp.decrease_key(parseInt($("#decrease-key").val()), parseInt($("#decrease-val").val()));
+    decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'insert');
+    display_tree_cy(decrease_cy, function (data) {
+        // return '<p class="cyval"> ' + data.val + '</p>';
+        return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+    });
+    $("#decrease-key").val("");
+    $("#decrease-val").val("");
+    return false;
+});
 
 
 
