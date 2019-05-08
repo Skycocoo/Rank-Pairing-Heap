@@ -466,10 +466,10 @@ display_tree_cy(insert_cy, function (data) {
 });
 
 
-rp.insert([11]);
-rp.insert([121]);
-rp.insert([1221]);
-rp.decrease_key(11, 10);
+// rp.insert([11]);
+// rp.insert([121]);
+// rp.insert([1221]);
+// rp.decrease_key(11, 10);
 
 let decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'decrease');
 display_tree_cy(decrease_cy, function (data) {

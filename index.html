@@ -144,6 +144,7 @@
                     <li> Split T(N) into two parts: one part is N + T(L), which forms a new Half Tree; the other part is T(R) </li>
                     <li> Move T(R) to original location of N </li>
                     <li> Insert the newly-formed Half Tree N + T(L) to the root list </li>
+                    <li> Recalculate Ranks if necessary </li>
                 </ol>
 
                 After decrease key, one-pass linking is performed to reduce the total number of roots. A bucket of Ranks are created to keep track of pairs of Half Trees with same Rank. Link any pairs of Half Trees if possible, and add linked Half Trees to new root list.
@@ -171,11 +172,12 @@
                 To extract min, there are several steps:
 
                 <ul>
-                    <li> 
+                    <li> Delete the root of the Half Tree taht contains min </li>
+                    <li> Recursively splice right spine of the Half Tree, and add those right spines to the root list </li>
+                    <li> Recalculate Ranks if necessary </li>
 
                 </ul>
 
-                <br>
                 <br>
 
                 <form id="extract-form" action="" method="GET">
@@ -188,9 +190,20 @@
 	</block>
 
 
-	<block>
+	<!-- <block>
 		<title> Amortization </title>
-	</block>
+	</block> -->
+
+    <block>
+        <title> About </title>
+        <content>
+            <ul>
+                <li> Github Repo: <a target="_blank" href="https://github.com/Skycocoo/Rank-Pairing-Heap/">Rank-Pairing-Heap</a> </li>
+                <li> Graph Drawing Tool: <a target="_blank" href="http://js.cytoscape.org/">Cytoscape</a> </li>
+                <li> Original Paper: <a target="_blank" href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.153.4644&rep=rep1&type=pdf">Rank-Pairing Heaps by Bernhard Haeupler, Siddhartha Sen, and Robert E. Tarjan</a> </li>
+            </ul>
+        </content>
+    </block>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.6.0/cytoscape.min.js"></script>
