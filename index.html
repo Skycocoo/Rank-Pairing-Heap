@@ -63,37 +63,50 @@
 
             <br>
 
-            Rank Pairing Heap contains a set of half trees which are linked circularly. The head of the linked list is the minimum element.
+            Rank Pairing Heap contains a set of half trees which is linked together with a linked list.
 
         </content>
     </block>
 
 	<block>
 		<title> Operations </title>
-		<sub>
+		<sub-block>
 			<title> Find Min </title>
-		</sub>
+            <content>
+                Rank Pairing Heap keeps the first root in the root list to be the current minumum value. In the example below, the minimum is marked as black.
+            </content>
+		</sub-block>
 
-		<sub>
+		<sub-block>
 			<title> Insert </title>
-            <form id="insert-form" action="" method="GET">
-                <input name="insert" id="insert" placeholder="- enter a number -" required>
-                <input type="submit" value="Submit">
-            </form>
-            <div class="cy" id="cy-insert"></div>
-		</sub>
+            <content>
+                When inserting a new node, the node itself becomes a new half-tree, and is linked with current root list. If the node contains the current minimum value, it is added to the front of the list.
 
-		<sub>
+                <br>
+                <br>
+
+                <form id="insert-form" action="" method="GET">
+                    <input name="insert" id="insert" placeholder="- enter a number -" required>
+                    <input type="submit" value="submit">
+                </form>
+                <div class="cy" id="cy-insert"></div>
+            </content>
+		</sub-block>
+
+		<sub-block>
 			<title> Union </title>
-		</sub>
+            <content>
+                To merge two Rank Pairing Heap, simply merge two root list together, and keep the first root to be the minimum value.
+            </content>
+		</sub-block>
 
-		<sub>
+		<sub-block>
 			<title> Decrease Key </title>
-		</sub>
+		</sub-block>
 
-		<sub>
+		<sub-block>
 			<title> Extract Min </title>
-		</sub>
+		</sub-block>
 	</block>
 
 

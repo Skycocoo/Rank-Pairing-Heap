@@ -17,7 +17,7 @@ function init_cy(cont) {
                     // 'width': 4,
                     'target-arrow-shape': 'triangle',
                     'line-color': '#9dbaea',
-                    'target-arrow-color': '#9dbaea'
+                    // 'target-arrow-color': '#9dbaea'
                 }
             },
         ],
@@ -26,7 +26,7 @@ function init_cy(cont) {
 }
 
 function calc_rank_cy(cy, arr, arrid) {
-    for (iter = arr.length - 1; iter >= 0; --iter) {
+    for (let iter = arr.length - 1; iter >= 0; --iter) {
         if (arr[iter] == null) continue;
         let cur_id = arrid + arr[iter],
             left = 2 * iter + 1,
@@ -53,9 +53,9 @@ function calc_rank_cy(cy, arr, arrid) {
 
 function add_tree_cy(cy, arr, arrid) {
     // console.log(arr);
-    for (i = 0; i < arr.length; ++i) {
+    for (let i = 0; i < arr.length; ++i) {
         let elems = [];
-        for (j = 0; j < arr[i].length; ++j) {
+        for (let j = 0; j < arr[i].length; ++j) {
             // console.log(arr[i][j]);
             if (arr[i][j] != null) {
                 elems.push({
@@ -71,7 +71,7 @@ function add_tree_cy(cy, arr, arrid) {
         cy.add(elems);
 
         elems = [];
-        for (j = arr[i].length-1; j >= 0; --j) {
+        for (let j = arr[i].length-1; j >= 0; --j) {
             if (arr[i][j] == null) continue;
             let cur_id = arrid + i + arr[i][j];
             let left = 2 * j + 1;
@@ -100,6 +100,9 @@ function add_tree_cy(cy, arr, arrid) {
         cy.add(elems);
         calc_rank_cy(cy, arr[i], arrid+i);
     }
+
+    // mark the minimum to be a different color
+    cy.$id(arrid + '0' + arr[0][0]).style('background-color', '#333333');
     return cy;
 }
 
@@ -120,6 +123,7 @@ function display_tree_cy(cy, label) {
 class RankPairingHeap {
     constructor() {
         this.arr = [];
+        this.rank = [];
     }
     insert(arr) {
         if (this.arr.length == 0) {
@@ -131,7 +135,24 @@ class RankPairingHeap {
                 this.arr.unshift(arr);
             }
         }
-        console.log(this.arr);
+    }
+    calc_rank() {
+        // calculate rank for current half trees
+        for (let i = 0; i < this.arr.length; ++i) {
+            let temp_rank = Array(this.arr[i].length).fill(-1);
+            for (let j = this.arr[i].length - 1; j >= 0; --j) {
+                if (this.arr[i][j] == null) continue;
+                let left = 2 * j + 1,
+                    right = 2 * j + 2,
+                    left_rank = (left < this.arr[i].length && this.arr[i][left] != null) ? temp_rank[left] : -1,
+                    right_rank = (right < this.arr[i].length && this.arr[i][right] != null) ? temp_rank[right] : -1;
+
+                temp_rank[j] = (j == 0) ? left_rank + 1 : (Math.abs(left_rank - right_rank) <= 1) ? Math.max(left_rank, right_rank) + 1 : Math.max(left_rank, right_rank);
+            }
+            // console.log(temp_rank);
+            this.rank.push(temp_rank[0]);
+        }
+        console.log(this.rank);
     }
 }
 
@@ -156,24 +177,26 @@ let heap_cy = add_tree_cy(init_cy($('#cy-heap')), [heap], 'heap');
 let half_cy = add_tree_cy(init_cy($('#cy-half')), rp.arr, 'half');
 
 display_tree_cy(heap_cy, function (data) {
-    return '<p class="cyid"> Val: ' + data.val + '</p>';
+    return '<p class="cyid"> ' + data.val + '</p>';
 });
 display_tree_cy(half_cy, function (data) {
-    return '<p class="cyid"> Val: ' + data.val + '</p>';
+    return '<p class="cyid"> ' + data.val + '</p>';
 });
 
 
 let insert_cy = add_tree_cy(init_cy($('#cy-insert')), rp.arr, 'insert');
 display_tree_cy(insert_cy, function (data) {
-    return '<p class="cyid"> Val: ' + data.val + '</p>';
+    return '<p class="cyid"> ' + data.val + '</p>';
 });
 
 $("#insert-form").submit(function() {
     if ($("#insert").val() == "") return;
     rp.insert([parseInt($("#insert").val(), 10)]);
+    rp.calc_rank();
     insert_cy = add_tree_cy(init_cy($('#cy-insert')), rp.arr, 'insert');
     display_tree_cy(insert_cy, function (data) {
-        return '<p class="cyid"> Val: ' + data.val + '</p>';
+        return '<p class="cyid"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
     });
     $("#insert").val("");
     return false;
