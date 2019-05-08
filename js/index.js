@@ -161,14 +161,11 @@ class RankPairingHeap {
 
         // assign the new key
         this.arr[arr_ind][index] = new_key;
-        // if decrease key of a root: no need to continue
-        if (index == 0) {
-            if (new_key < this.arr[0][0]) {
-                // maintain that the min element is the first root
-                [this.arr[0], this.arr[arr_ind]] = [this.arr[arr_ind], this.arr[0]];
-            }
-            return;
-        }
+        // // if decrease key of a root: no need to continue
+        // if (index == 0) {
+        //     this.restore_min();
+        //     return;
+        // }
 
         let subtree = this.get_sub_tree(this.arr[arr_ind], index),
             right_spine = this.get_sub_tree(this.arr[arr_ind], 2 * index + 2);
@@ -184,12 +181,46 @@ class RankPairingHeap {
         // add the decreased subtree
         this.insert(subtree);
 
-        // recalculate rank for each half-tree
-        this.calc_rank();
-
-
         // link all pairs of roots with same rank
         this.link_trees();
+
+        // recalculate rank for each half-tree
+        this.restore_min();
+        this.calc_rank();
+    }
+
+    extract_min() {
+        // remove min
+        let tree = this.get_sub_tree(this.arr[0], 1);
+        this.arr.shift();
+
+        // attach all right spines recursively
+        let right_ind = 2,
+            right_spines = [tree];
+        while (right_ind < tree.length) {
+            right_spines.push(this.get_sub_tree(tree, right_ind));
+            right_ind = 2 * right_ind + 2;
+        }
+
+        // last element of right spines is always [null] //?
+        for (let i = 0; i < right_spines.length-1; ++i) {
+            this.clear_right_spine(right_spines[i]);
+            this.insert(right_spines[i]);
+            // let isnull = true;
+            // for (let j = 0; j < right_spines[i].length; ++j) {
+            //     if (right_spines[i][j] != null) {
+            //         isnull = false;
+            //         break;
+            //     }
+            // }
+            // if (!isnull) {
+            //     this.clear_right_spine(right_spines[i]);
+            //     this.insert(right_spines[i]);
+            // }
+        }
+        // recalculate rank for each half-tree
+        this.restore_min();
+        this.calc_rank();
     }
 
 
@@ -219,14 +250,8 @@ class RankPairingHeap {
         // update arr to be new arr
         this.arr = new_arr;
 
-        // restor min pointer
-        let min_ind = 0;
-        for (let i = 0; i < this.arr.length; ++i) {
-            if (this.arr[min_ind][0] > this.arr[i][0]) min_ind = i;
-        }
-        [this.arr[0], this.arr[min_ind]] = [this.arr[min_ind], this.arr[0]];
-
         // update rank at the end;
+        this.restore_min();
         this.calc_rank();
     }
 
@@ -375,6 +400,15 @@ class RankPairingHeap {
         return undefined;
     }
 
+    restore_min() {
+        // restor min pointer
+        let min_ind = 0;
+        for (let i = 0; i < this.arr.length; ++i) {
+            if (this.arr[min_ind][0] > this.arr[i][0]) min_ind = i;
+        }
+        [this.arr[0], this.arr[min_ind]] = [this.arr[min_ind], this.arr[0]];
+    }
+
     calc_rank() {
         this.rank = [];
         // calculate rank for current half trees
@@ -435,12 +469,21 @@ display_tree_cy(insert_cy, function (data) {
 });
 
 
-let decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'insert');
+let decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'decrease');
 display_tree_cy(decrease_cy, function (data) {
     // return '<p class="cyval"> ' + data.val + '</p>';
     return '<p class="cyrank"> Val: ' + data.val + '</p>' +
            '<p class="cyrank"> Rank: ' + data.rank + '</p>';
 });
+
+
+let extract_cy = add_tree_cy(init_cy($('#cy-extract')), rp.arr, 'extract');
+display_tree_cy(extract_cy, function (data) {
+    // return '<p class="cyval"> ' + data.val + '</p>';
+    return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+           '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+});
+
 
 
 
@@ -465,7 +508,7 @@ $("#decrease-form").submit(function() {
         rp.decrease_key(parseInt($("#decrease-key").val()), parseInt($("#decrease-val").val()));
     }
 
-    decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'insert');
+    decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'decrease');
     display_tree_cy(decrease_cy, function (data) {
         // return '<p class="cyval"> ' + data.val + '</p>';
         return '<p class="cyrank"> Val: ' + data.val + '</p>' +
@@ -476,7 +519,16 @@ $("#decrease-form").submit(function() {
     return false;
 });
 
-
+$("#extract-form").submit(function() {
+    rp.extract_min();
+    extract_cy = add_tree_cy(init_cy($('#cy-extract')), rp.arr, 'extract');
+    display_tree_cy(extract_cy, function (data) {
+        // return '<p class="cyval"> ' + data.val + '</p>';
+        return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+    });
+    return false;
+});
 
 
 //
