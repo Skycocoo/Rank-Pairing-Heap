@@ -138,13 +138,19 @@
 		<sub-block>
 			<title> Decrease Key </title>
             <content>
-                To decrease key, there are few steps:
+                To decrease key, there are several steps:
                 <ol>
                     <li> Find the target node N and its corresponding subtree T(N). Assume the left child is L, and right child is R. Therefore, T(N) = N + T(L) + T(R) </li>
                     <li> Split T(N) into two parts: one part is N + T(L), which forms a new Half Tree; the other part is T(R) </li>
                     <li> Move T(R) to original location of N </li>
                     <li> Insert the newly-formed Half Tree N + T(L) to the root list </li>
                 </ol>
+
+                After decrease key, one-pass linking is performed to reduce the total number of roots. A bucket of Ranks are created to keep track of pairs of Half Trees with same Rank. Link any pairs of Half Trees if possible, and add linked Half Trees to new root list.
+
+                <br>
+
+                One minor detail is that the after linking two Half Trees with same Rank, (unlike Fibonacci Heap), the newly-linked Half Tree will not add back to the bucket for future link.
 
                 <br>
                 <br>
@@ -169,16 +175,16 @@
 		<title> Amortization </title>
 	</block>
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.6.0/cytoscape.min.js"></script>
     <script src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js"></script>
-    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.5.0/cytoscape-dagre.js"></script> -->
+    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.5.0/cytoscape-dagre.js"></script>
 
     <!-- only for local testing -->
-    <script src="js/ref/jquery.min.js"></script>
+    <!-- <script src="js/ref/jquery.min.js"></script>
     <script src="js/ref/cytoscape.min.js"></script>
     <script src="js/ref/dagre.min.js"></script>
-    <script src="js/ref/cytoscape-dagre.js"></script>
+    <script src="js/ref/cytoscape-dagre.js"></script> -->
 
     <script src="js/cytoscape-node-html-label.min.js"></script>
     <script src="js/index.js"></script>
