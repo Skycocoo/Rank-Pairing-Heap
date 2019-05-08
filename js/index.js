@@ -505,6 +505,19 @@ $("#insert-form").submit(function() {
     return false;
 });
 
+$("#decrease-refresh").click(function() {
+    decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'decrease');
+    display_tree_cy(decrease_cy, function (data) {
+        // return '<p class="cyval"> ' + data.val + '</p>';
+        return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+    });
+    $("#decrease-key").val("");
+    $("#decrease-val").val("");
+    return false;
+});
+
+
 $("#decrease-form").submit(function() {
     if (!isNaN(parseInt($("#decrease-key").val(), 10)) && !isNaN(parseInt($("#decrease-val").val(), 10))) {
         rp.decrease_key(parseInt($("#decrease-key").val()), parseInt($("#decrease-val").val()));
@@ -518,6 +531,17 @@ $("#decrease-form").submit(function() {
     });
     $("#decrease-key").val("");
     $("#decrease-val").val("");
+    return false;
+});
+
+$("#extract-refresh").click(function() {
+    extract_cy = add_tree_cy(init_cy($('#cy-extract')), rp.arr, 'extract');
+    display_tree_cy(extract_cy, function (data) {
+        // return '<p class="cyval"> ' + data.val + '</p>';
+        return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+    });
+    return false;
     return false;
 });
 

@@ -161,6 +161,9 @@
                     <input name="decrease-val" id="decrease-val" placeholder="new value" required>
                     <input type="submit" value="submit">
                 </form>
+                <form id="decrease-refresh" action="" method="GET">
+                    <input type="button" value="refresh">
+                </form>
                 <div class="cy" id="cy-decrease"></div>
 
             </content>
@@ -172,8 +175,8 @@
                 To extract min, there are several steps:
 
                 <ul>
-                    <li> Delete the root of the Half Tree taht contains min </li>
-                    <li> Recursively splice right spine of the Half Tree, and add those right spines to the root list </li>
+                    <li> Delete the root N of the Half Tree that contains min. Root N has a left child L </li>
+                    <li> For the remaining subtree T(L), recursively splice right spine of current subtree, and add those right spines to the root list </li>
                     <li> Recalculate Ranks if necessary </li>
 
                 </ul>
@@ -182,6 +185,9 @@
 
                 <form id="extract-form" action="" method="GET">
                     <input type="submit" value="extract min">
+                </form>
+                <form id="extract-refresh" action="" method="GET">
+                    <input type="button" value="refresh">
                 </form>
                 <div class="cy" id="cy-extract"></div>
 
