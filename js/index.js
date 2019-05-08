@@ -101,8 +101,10 @@ function add_tree_cy(cy, arr, arrid) {
         calc_rank_cy(cy, arr[i], arrid+i);
     }
 
-    // mark the minimum to be a different color
-    cy.$id(arrid + '0' + arr[0][0]).style('background-color', '#333333');
+    if (arr.length > 0) {
+        // mark the minimum to be a different color
+        cy.$id(arrid + '0' + arr[0][0]).style('background-color', '#333333');
+    }
     return cy;
 }
 
@@ -161,29 +163,24 @@ class RankPairingHeap {
 
         // assign the new key
         this.arr[arr_ind][index] = new_key;
-        // // if decrease key of a root: no need to continue
-        // if (index == 0) {
-        //     this.restore_min();
-        //     return;
-        // }
+        // if decrease key of a root: no need to continue
+        if (index != 0) {
+            let subtree = this.get_sub_tree(this.arr[arr_ind], index),
+                right_spine = this.get_sub_tree(this.arr[arr_ind], 2 * index + 2);
 
-        let subtree = this.get_sub_tree(this.arr[arr_ind], index),
-            right_spine = this.get_sub_tree(this.arr[arr_ind], 2 * index + 2);
+            // clear up original subtree under parent
+            this.clear_sub_tree(this.arr[arr_ind], index);
+            this.clear_right_spine(subtree);
 
-        // clear up original subtree under parent
-        this.clear_sub_tree(this.arr[arr_ind], index);
-        this.clear_right_spine(subtree);
+            // copy the right spine of tree to the location of index
+            this.attach_sub_tree(this.arr[arr_ind], index, right_spine);
+            subtree = this.restore_arr(subtree);
 
-        // copy the right spine of tree to the location of index
-        this.attach_sub_tree(this.arr[arr_ind], index, right_spine);
-        subtree = this.restore_arr(subtree);
-
-        // add the decreased subtree
-        this.insert(subtree);
-
+            // add the decreased subtree
+            this.insert(subtree);
+        }
         // link all pairs of roots with same rank
         this.link_trees();
-
         // recalculate rank for each half-tree
         this.restore_min();
         this.calc_rank();
@@ -198,25 +195,25 @@ class RankPairingHeap {
         let right_ind = 2,
             right_spines = [tree];
         while (right_ind < tree.length) {
-            right_spines.push(this.get_sub_tree(tree, right_ind));
+            right_spines.push(this.restore_arr(this.get_sub_tree(tree, right_ind)));
             right_ind = 2 * right_ind + 2;
         }
 
-        // last element of right spines is always [null] //?
-        for (let i = 0; i < right_spines.length-1; ++i) {
-            this.clear_right_spine(right_spines[i]);
-            this.insert(right_spines[i]);
-            // let isnull = true;
-            // for (let j = 0; j < right_spines[i].length; ++j) {
-            //     if (right_spines[i][j] != null) {
-            //         isnull = false;
-            //         break;
-            //     }
-            // }
-            // if (!isnull) {
-            //     this.clear_right_spine(right_spines[i]);
-            //     this.insert(right_spines[i]);
-            // }
+        // last element of right spines is always [null] // no
+        for (let i = 0; i < right_spines.length; ++i) {
+            // this.clear_right_spine(right_spines[i]);
+            // this.insert(right_spines[i]);
+            let isnull = true;
+            for (let j = 0; j < right_spines[i].length; ++j) {
+                if (right_spines[i][j] != null) {
+                    isnull = false;
+                    break;
+                }
+            }
+            if (!isnull) {
+                this.clear_right_spine(right_spines[i]);
+                this.insert(right_spines[i]);
+            }
         }
         // recalculate rank for each half-tree
         this.restore_min();
@@ -406,7 +403,7 @@ class RankPairingHeap {
         for (let i = 0; i < this.arr.length; ++i) {
             if (this.arr[min_ind][0] > this.arr[i][0]) min_ind = i;
         }
-        [this.arr[0], this.arr[min_ind]] = [this.arr[min_ind], this.arr[0]];
+        if (min_ind != 0) [this.arr[0], this.arr[min_ind]] = [this.arr[min_ind], this.arr[0]];
     }
 
     calc_rank() {
@@ -468,6 +465,11 @@ display_tree_cy(insert_cy, function (data) {
            '<p class="cyrank"> Rank: ' + data.rank + '</p>';
 });
 
+
+rp.insert([11]);
+rp.insert([121]);
+rp.insert([1221]);
+rp.decrease_key(11, 10);
 
 let decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'decrease');
 display_tree_cy(decrease_cy, function (data) {
