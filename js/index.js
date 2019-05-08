@@ -125,6 +125,12 @@ class RankPairingHeap {
         this.arr = [];
         this.rank = [];
     }
+    // get_min() {
+    //     return this.arr[0][0];
+    // }
+
+    // ------------------- operations -------------------
+
     insert(arr) {
         if (this.arr.length == 0) {
             this.arr.push(arr);
@@ -135,7 +141,121 @@ class RankPairingHeap {
                 this.arr.unshift(arr);
             }
         }
+        this.calc_rank();
     }
+
+    decrease_key(key, new_key) {
+        let result = this.find_key(key);
+        if (result == undefined) {
+            console.log("key does not exist");
+            return;
+        }
+        let arr_ind = result[0],
+            index = result[1],
+            parent = Math.floor((result[1] + 1)/2);
+
+        // assign the new key
+        this.arr[arr_ind][index] = new_key;
+
+        let subtree = this.get_sub_tree(this.arr[arr_ind], index),
+            right_spine = this.get_sub_tree(this.arr[arr_ind], 2 * index + 2);
+
+        // clear up original subtree under parent
+        this.clear_sub_tree(this.arr[arr_ind], index);
+        this.clear_right_spine(subtree);
+
+        // copy the right spine of tree to the location of index
+        this.attach_sub_tree(this.arr[arr_ind], index, right_spine);
+
+        // add the decreased subtree
+        this.insert(subtree);
+
+        // recalculate rank for each half-tree
+        this.calc_rank();
+    }
+
+
+    // ------------------- helper functions -------------------
+
+    get_sub_tree(arr, index) {
+        if (index >= arr.length) return [null];
+
+        let queue = [],
+            result = [];
+        queue.push(index);
+        while (queue.length > 0) {
+            let cur = queue.shift();
+            result.push(arr[cur]);
+            if (2 * cur + 1 < arr.length) queue.push(2 * cur + 1);
+            if (2 * cur + 2 < arr.length) queue.push(2 * cur + 2);
+        }
+        return result;
+    }
+
+    clear_sub_tree(arr, index) {
+        if (index >= arr.length) return arr;
+        if (index < 0) return [];
+
+        let queue = [];
+        queue.push(index);
+        while (queue.length > 0) {
+            let cur = queue.shift();
+            arr[cur] = null;
+            if (2 * cur + 1 < arr.length) queue.push(2 * cur + 1);
+            if (2 * cur + 2 < arr.length) queue.push(2 * cur + 2);
+        }
+        return arr;
+    }
+
+    clear_right_spine(arr) {
+        if (arr.length < 3) return;
+
+        let queue = [];
+        queue.push(2);
+        while (queue.length > 0) {
+            let cur = queue.shift();
+            arr[cur] = null;
+            if (2 * cur + 1 < arr.length) queue.push(2 * cur + 1);
+            if (2 * cur + 2 < arr.length) queue.push(2 * cur + 2);
+        }
+    }
+
+    attach_sub_tree(arr, index, tree) {
+        // attach subtree to the tree starting at index
+        // assume the size of the array suffice the attached tree
+        if (index >= arr.length) return arr;
+
+        let arr_queue = [], tree_queue = [];
+        arr_queue.push(index);
+        tree_queue.push(0);
+        while (tree_queue.length > 0) {
+            let arr_cur = arr_queue.shift(),
+                tree_cur = tree_queue.shift();
+            arr[arr_cur] = tree[tree_cur];
+            if (2 * tree_cur + 1 < tree.length) {
+                tree_queue.push(2 * tree_cur + 1);
+                arr_queue.push(2 * arr_cur + 1);
+            }
+            if (2 * tree_cur + 2 < tree.length) {
+                tree_queue.push(2 * tree_cur + 2);
+                arr_queue.push(2 * arr_cur + 2);
+            }
+        }
+        return arr;
+    }
+
+    // assume unique key
+    find_key(key) {
+        for (let i = 0; i < this.arr.length; ++i) {
+            for (let j = 0; j < this.arr[i].length; ++j) {
+                if (this.arr[i][j] == key) {
+                    return [i, j];
+                }
+            }
+        }
+        return undefined;
+    }
+
     calc_rank() {
         // calculate rank for current half trees
         for (let i = 0; i < this.arr.length; ++i) {
@@ -152,9 +272,12 @@ class RankPairingHeap {
             // console.log(temp_rank);
             this.rank.push(temp_rank[0]);
         }
-        console.log(this.rank);
+        // console.log(this.rank);
     }
 }
+
+
+
 
 let rp = new RankPairingHeap();
 let heap = [1,
@@ -177,26 +300,34 @@ let heap_cy = add_tree_cy(init_cy($('#cy-heap')), [heap], 'heap');
 let half_cy = add_tree_cy(init_cy($('#cy-half')), rp.arr, 'half');
 
 display_tree_cy(heap_cy, function (data) {
-    return '<p class="cyid"> ' + data.val + '</p>';
+    return '<p class="cyval"> ' + data.val + '</p>';
 });
 display_tree_cy(half_cy, function (data) {
-    return '<p class="cyid"> ' + data.val + '</p>';
+    return '<p class="cyval"> ' + data.val + '</p>';
 });
 
+
+// rp.decrease_key(4, -1);
 
 let insert_cy = add_tree_cy(init_cy($('#cy-insert')), rp.arr, 'insert');
 display_tree_cy(insert_cy, function (data) {
-    return '<p class="cyid"> ' + data.val + '</p>';
+    return '<p class="cyval"> ' + data.val + '</p>';
 });
+
+
+
+
+
+// ajax
 
 $("#insert-form").submit(function() {
     if ($("#insert").val() == "") return;
     rp.insert([parseInt($("#insert").val(), 10)]);
-    rp.calc_rank();
     insert_cy = add_tree_cy(init_cy($('#cy-insert')), rp.arr, 'insert');
     display_tree_cy(insert_cy, function (data) {
-        return '<p class="cyid"> Val: ' + data.val + '</p>' +
-               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+        return '<p class="cyval"> ' + data.val + '</p>';
+        // return '<p class="cyid"> Val: ' + data.val + '</p>' +
+        //        '<p class="cyrank"> Rank: ' + data.rank + '</p>';
     });
     $("#insert").val("");
     return false;

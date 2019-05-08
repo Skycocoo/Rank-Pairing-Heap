@@ -54,3 +54,8 @@ p {
 .cyrank {
     top: -15px;
 }
+
+.cyval {
+    position: relative;
+    left: 10px;
+}
