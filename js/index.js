@@ -179,8 +179,6 @@ class RankPairingHeap {
             // add the decreased subtree
             this.insert(subtree);
         }
-        // link all pairs of roots with same rank
-        this.link_trees();
         // recalculate rank for each half-tree
         this.restore_min();
         this.calc_rank();
@@ -191,14 +189,14 @@ class RankPairingHeap {
         let tree = this.get_sub_tree(this.arr[0], 1);
         this.arr.shift();
 
-        // attach all right spines recursively
+        // detach all right spines recursively
         let right_ind = 2,
             right_spines = [tree];
         while (right_ind < tree.length) {
             right_spines.push(this.restore_arr(this.get_sub_tree(tree, right_ind)));
             right_ind = 2 * right_ind + 2;
         }
-
+        // console.log("right spines", right_spines)
         // last element of right spines is always [null] // no
         for (let i = 0; i < right_spines.length; ++i) {
             // this.clear_right_spine(right_spines[i]);
@@ -215,6 +213,16 @@ class RankPairingHeap {
                 this.insert(right_spines[i]);
             }
         }
+
+        this.calc_rank();
+
+        // console.log("arr before linking")
+        // for (let i = 0; i < this.arr.length; ++i) {
+        //     console.log(this.arr[i], this.rank[i]);
+        // }
+        // link all pairs of roots with same rank
+        this.link_trees();
+        // console.log("arr after linking", this.arr)
         // recalculate rank for each half-tree
         this.restore_min();
         this.calc_rank();
@@ -274,7 +282,7 @@ class RankPairingHeap {
     }
 
     restore_arr(arr) {
-        // console.log("restore tree:");
+        // console.log("restore tree:", arr);
         let level = Math.ceil(Math.log2(arr.length + 1));
         // console.log(arr, level);
         for (let j = level; j > 0; --j) {
@@ -410,6 +418,8 @@ class RankPairingHeap {
         this.rank = [];
         // calculate rank for current half trees
         for (let i = 0; i < this.arr.length; ++i) {
+            // restore array to its simplest form
+            this.arr[i] = this.restore_arr(this.arr[i])
             let temp_rank = Array(this.arr[i].length).fill(-1);
             for (let j = this.arr[i].length - 1; j >= 0; --j) {
                 if (this.arr[i][j] == null) continue;
@@ -466,10 +476,16 @@ display_tree_cy(insert_cy, function (data) {
 });
 
 
-// rp.insert([11]);
-// rp.insert([121]);
-// rp.insert([1221]);
-// rp.decrease_key(11, 10);
+// rp.decrease_key(4, -3);
+// rp.decrease_key(3, -2);
+// rp.decrease_key(10, -4);
+// // console.log(rp.arr)
+// console.log("arrays: ");
+// for (let i = 0; i < rp.arr.length; ++i) {
+//     console.log(rp.arr[i], rp.rank[i]);
+// }
+// rp.extract_min();
+
 
 let decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'decrease');
 display_tree_cy(decrease_cy, function (data) {
@@ -541,7 +557,6 @@ $("#extract-refresh").click(function() {
         return '<p class="cyrank"> Val: ' + data.val + '</p>' +
                '<p class="cyrank"> Rank: ' + data.rank + '</p>';
     });
-    return false;
     return false;
 });
 

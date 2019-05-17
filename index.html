@@ -147,12 +147,6 @@
                     <li> Recalculate Ranks if necessary </li>
                 </ol>
 
-                After decrease key, one-pass linking is performed to reduce the total number of roots. A bucket of Ranks are created to keep track of pairs of Half Trees with same Rank. Link any pairs of Half Trees if possible, and add linked Half Trees to new root list.
-
-                <br>
-
-                One minor detail is that the after linking two Half Trees with same Rank, (unlike Fibonacci Heap), the newly-linked Half Tree will not add back to the bucket for future link.
-
                 <br>
                 <br>
 
@@ -181,6 +175,13 @@
 
                 </ul>
 
+                After delete min, one-pass linking is performed to reduce the total number of roots. A bucket of Ranks are created to keep track of pairs of Half Trees with same Rank. Link any pairs of Half Trees if possible, and add linked Half Trees to new root list.
+
+                <br>
+
+                One minor detail is that the after linking two Half Trees with same Rank, (unlike Fibonacci Heap), the newly-linked Half Tree will not add back to the bucket for future link.
+
+                <br>
                 <br>
 
                 <form id="extract-form" action="" method="GET">
