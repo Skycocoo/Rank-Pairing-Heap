@@ -196,10 +196,118 @@
 		</sub-block>
 	</block>
 
-
-	<!-- <block>
+    <block>
 		<title> Amortization </title>
-	</block> -->
+        <sub-block>
+            <title> Potential Function </title>
+            <content>
+                The potential function for this analysis consists of two terms: base potential and extra potential, which depend on rank that is calculated by following rules as introduced above:
+
+                <br>
+
+                <ul>
+                    <li> If it is a leaf, Rank = 0 </li>
+                    <li> If it is a root, Rank = 1 + Rank(L) </li>
+                    <li> If |Rank(L) - Rank(R)| <= 1: Rank = 1 + Max(Rank(L), Rank(R)) </li>
+                    <li> If |Rank(L) - Rank(R)| > 1: Rank = Max(Rank(L), Rank(R)) </li>
+                </ul>
+
+                The paper describes nodes with respect to the rank differences between a node and its two children: based on the rules, there are three types of nodes in Rank Pairing Heap: (1, 1) node, (1, 2) node, and (0, i) node. For example, (1, 1) node means that the node N has two children, for which both of them have rank Rank(N)-1.
+
+                <br>
+                <br>
+
+                Base potential for a node is the sum of rank differences of its children - 1. For example, (1, 1) node has a base potential of 1+1-1 = 1, (1, 2) node has a base potential of 1+2-1 = 2, and (0, i) node has a base potential of i-1.
+
+                <br>
+                <br>
+
+                Extra potential for a node is defined as 1 for a root, 0 for a (1, 1) node, and 0 for a (1, 2) node or a (0, i) node.
+
+                <br>
+                <br>
+
+                Therefore, the total potential for a node is as follows, and for the entire Rank Pairing Heap is the summation of potentials for all nodes:
+
+                <ul>
+                    <li> 0: (1, 1) node </li>
+                    <li> 1: root node </li>
+                    <li> 2: (1, 2) node </li>
+                    <li> i-1: (0, i) node </li>
+                </ul>
+
+
+                <br>
+                <br>
+
+                Some of the following amortization depends on the level of the tree. For a root with Rank = k, the size of the half tree is bounded similarly as Fibonacci Heap, for which k <= O(logn).
+
+            </content>
+        </sub-block>
+
+
+
+        <sub-block>
+            <title> Amortized Find Min, Insert, and Union </title>
+            <content>
+                This analysis is simple, since those operations takes O(1) constant time, and at most increase the potential by O(1). In total, they still take O(1) time.
+            </content>
+        </sub-block>
+
+
+        <sub-block>
+            <title> Amortized Decrease Key </title>
+            <content>
+                Decrease Key is separated into two parts: 1. Decrease the key of the node and perform necessary restructure to place the half tree of the node to the root list. 2. Recalculate the rank.
+
+                <br>
+
+                The true cost depends on the number of nodes for which their ranks need to be recalculated, which is at most O(log(n)).
+
+                <br>
+                <br>
+
+                The first operation should take O(1) time to form a new half tree rooted by the decreased node, and move its original right tree to become the new left child of its parent.
+
+                <br>
+                <br>
+
+                The second operation will decrease ranks for the nodes starting from the parent of the decreased node to maintain above rules. Denote the decreased key N as U1, its left child as U0, and let Ui for i = [2, k] be Ui = parent(Ui-1), such that Uk is either the root or the node that does not decrease in rank.
+
+                <br>
+
+                For each Ui for i = [2, k], the rank differences drop by at most 1, and the base potential drops except for (1, 1) node: (1, 1) => (1, 2); (1, 2) => (1, 1) or (0, 2); (0, i) => (0, i-1). We could show that there are at most 2 (1, 1) nodes along the path of Ui. Suppose Uj is the first (1, 1) node along the path. Rank(Uj) could at most decrease by 1. Suppose Uj' is the second (1, 1) node where j' > j, because Uj'-1's rank drop by 1, Uj' becomes a (1, 2) node, which still satisfies the rules above. Therefore Rank(Uj') = Rank_new(Uj'), and j' = k.
+
+                <br>
+
+                Therefore, along the path of Ui for i = [2, k], the total potential drops by k - 1 (from the new half-tree of N that is added to the root list) - 3 (since i starts from 2 instead of 0) - 2 (from the two (1, 1) node) = k - 6.
+
+                <br>
+                <br>
+
+                In total, the amortized cost for Decrease Key is therefore O(log(n) - log(n) + 6) = O(1).
+
+            </content>
+        </sub-block>
+
+        <sub-block>
+            <title> Amortized Extract Min </title>
+            <content>
+                For Extract Min, the true cost depends on the number of half-trees that are merged together, which is at most O(log(n)).
+
+                <br>
+
+                There are at most O(log(n)) original (1, 1) nodes on the right spine of the half-tree rooted by L(N) to become a new half-tree. Therefore, the total potential increases by at most O(log(n)).
+
+                <br>
+                <br>
+
+                In total, the amortized cost for Extract Min is therefore O(log(n) + log(n)) = O(log(n)).
+
+            </content>
+        </sub-block>
+    </block>
+
 
     <block>
         <title> About </title>
