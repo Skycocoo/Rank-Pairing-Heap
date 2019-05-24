@@ -133,7 +133,16 @@ class RankPairingHeap {
 
     // ------------------- operations -------------------
 
-    insert(arr) {
+    insert(arr, check = true) {
+        if (check) {
+            for (let i = 0; i < arr.length; ++i) {
+                let result = this.find_key(arr[i]);
+                if (result != undefined) {
+                    alert("should not insert duplicate keys");
+                    return;
+                }
+            }
+        }
         if (this.arr.length == 0) {
             this.arr.push(arr);
         } else {
@@ -149,7 +158,7 @@ class RankPairingHeap {
     decrease_key(key, new_key) {
         let result = this.find_key(key);
         if (result == undefined) {
-            console.log("key does not exist");
+            alert("key does not exist");
             return;
         }
 
@@ -157,7 +166,7 @@ class RankPairingHeap {
             index = result[1];
 
         if (this.arr[arr_ind][index] < new_key) {
-            console.log("should not increment key");
+            alert("should not increment key");
             return;
         }
 
@@ -177,7 +186,7 @@ class RankPairingHeap {
             subtree = this.restore_arr(subtree);
 
             // add the decreased subtree
-            this.insert(subtree);
+            this.insert(subtree, false);
         }
         // recalculate rank for each half-tree
         this.restore_min();
@@ -210,7 +219,7 @@ class RankPairingHeap {
             }
             if (!isnull) {
                 this.clear_right_spine(right_spines[i]);
-                this.insert(right_spines[i]);
+                this.insert(right_spines[i], false);
             }
         }
 
@@ -475,18 +484,6 @@ display_tree_cy(insert_cy, function (data) {
            '<p class="cyrank"> Rank: ' + data.rank + '</p>';
 });
 
-
-// rp.decrease_key(4, -3);
-// rp.decrease_key(3, -2);
-// rp.decrease_key(10, -4);
-// // console.log(rp.arr)
-// console.log("arrays: ");
-// for (let i = 0; i < rp.arr.length; ++i) {
-//     console.log(rp.arr[i], rp.rank[i]);
-// }
-// rp.extract_min();
-
-
 let decrease_cy = add_tree_cy(init_cy($('#cy-decrease')), rp.arr, 'decrease');
 display_tree_cy(decrease_cy, function (data) {
     // return '<p class="cyval"> ' + data.val + '</p>';
@@ -501,9 +498,6 @@ display_tree_cy(extract_cy, function (data) {
     return '<p class="cyrank"> Val: ' + data.val + '</p>' +
            '<p class="cyrank"> Rank: ' + data.rank + '</p>';
 });
-
-
-
 
 // ajax
 
@@ -571,5 +565,57 @@ $("#extract-form").submit(function() {
     return false;
 });
 
+// all
 
-//
+let rp_all = new RankPairingHeap();
+rp_all.insert(half);
+
+let all_cy = add_tree_cy(init_cy($('#cy-all')), rp_all.arr, 'cy-all');
+display_tree_cy(all_cy, function (data) {
+    // return '<p class="cyval"> ' + data.val + '</p>';
+    return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+           '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+});
+
+
+$("#insert-all").submit(function() {
+    if (!isNaN(parseInt($("#insert-").val(), 10))) {
+        rp_all.insert([parseInt($("#insert-").val(), 10)]);
+    }
+    all_cy = add_tree_cy(init_cy($('#cy-all')), rp_all.arr, 'cy-all');
+    display_tree_cy(all_cy, function (data) {
+        // return '<p class="cyval"> ' + data.val + '</p>';
+        return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+    });
+    $("#insert-").val("");
+    return false;
+});
+
+
+$("#decrease-all").submit(function() {
+    if (!isNaN(parseInt($("#decrease-key-").val(), 10)) && !isNaN(parseInt($("#decrease-val-").val(), 10))) {
+        rp_all.decrease_key(parseInt($("#decrease-key-").val()), parseInt($("#decrease-val-").val()));
+    }
+
+    all_cy = add_tree_cy(init_cy($('#cy-all')), rp_all.arr, 'cy-all');
+    display_tree_cy(all_cy, function (data) {
+        // return '<p class="cyval"> ' + data.val + '</p>';
+        return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+    });
+    $("#decrease-key-").val("");
+    $("#decrease-val-").val("");
+    return false;
+});
+
+$("#extract-all").submit(function() {
+    rp_all.extract_min();
+    all_cy = add_tree_cy(init_cy($('#cy-all')), rp_all.arr, 'cy-all');
+    display_tree_cy(all_cy, function (data) {
+        // return '<p class="cyval"> ' + data.val + '</p>';
+        return '<p class="cyrank"> Val: ' + data.val + '</p>' +
+               '<p class="cyrank"> Rank: ' + data.rank + '</p>';
+    });
+    return false;
+});

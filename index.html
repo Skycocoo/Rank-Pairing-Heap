@@ -147,6 +147,8 @@
                     <li> Recalculate Ranks if necessary </li>
                 </ol>
 
+                Click "refresh" to update the graph from last operations
+
                 <br>
                 <br>
 
@@ -184,6 +186,11 @@
                 <br>
                 <br>
 
+                Click "refresh" to update the graph from last operations
+
+                <br>
+                <br>
+
                 <form id="extract-form" action="" method="GET">
                     <input type="submit" value="extract min">
                 </form>
@@ -194,6 +201,34 @@
 
             </content>
 		</sub-block>
+
+        <sub-block>
+            <title> All operations </title>
+            <ul>
+                <li> Insert
+                    <form id="insert-all" style="display:inline-block;" action="" method="GET">
+                        <input name="insert" id="insert-" placeholder="a number to be inserted" required>
+                        <input type="submit" value="submit">
+                    </form>
+                </li>
+                <li> Decrease Key
+                    <form id="decrease-all" style="display:inline-block;" action="" method="GET">
+                        <input name="decrease-key" id="decrease-key-" placeholder="key to be decreased" required>
+                        <input name="decrease-val" id="decrease-val-" placeholder="new value" required>
+                        <input type="submit" value="submit">
+                    </form>
+                </li>
+                <li> Extract Min
+                    <form id="extract-all" style="display:inline-block;" action="" method="GET">
+                        <input type="submit" value="extract">
+                    </form>
+                </li>
+            </ul>
+
+            <div class="cy" id="cy-all"></div>
+        </sub-block>
+
+
 	</block>
 
     <block>
