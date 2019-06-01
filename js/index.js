@@ -162,6 +162,12 @@ class RankPairingHeap {
             return;
         }
 
+        let dup = this.find_key(new_key);
+        if (dup != undefined) {
+            alert("shall not create duplicate keys");
+            return;
+        }
+
         let arr_ind = result[0],
             index = result[1];
 
